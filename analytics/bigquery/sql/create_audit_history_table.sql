@@ -1,0 +1,2 @@
+-- Placeholder BigQuery table creation script
+-- TODO: Create fairness.audit_history table

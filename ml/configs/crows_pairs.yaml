@@ -1,0 +1,6 @@
+dataset_name: CrowS-Pairs
+task_type: nlp_bias_benchmark
+target_column: ""
+protected_attributes: []
+model_name: ""
+notes: ""

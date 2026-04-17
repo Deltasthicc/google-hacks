@@ -1,0 +1,6 @@
+dataset_name: ACSIncome
+task_type: tabular_classification
+target_column: ""
+protected_attributes: []
+model_name: ""
+notes: ""

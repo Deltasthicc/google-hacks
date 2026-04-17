@@ -1,0 +1,6 @@
+[
+  { "name": "export_id", "type": "STRING", "mode": "REQUIRED" },
+  { "name": "audit_id", "type": "STRING", "mode": "REQUIRED" },
+  { "name": "format", "type": "STRING", "mode": "NULLABLE" },
+  { "name": "created_at", "type": "TIMESTAMP", "mode": "REQUIRED" }
+]

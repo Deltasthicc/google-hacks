@@ -1,0 +1,44 @@
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Flutter / Dart
+.dart_tool/
+.packages
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# Env / Secrets
+.env
+*.env
+service-account.json
+firebase-adminsdk.json
+
+# Node
+node_modules/
+
+# Logs
+*.log
+
+# Data / outputs
+ml/datasets/raw/*
+!ml/datasets/raw/.gitkeep
+ml/datasets/processed/*
+!ml/datasets/processed/.gitkeep
+ml/outputs/charts/*
+!ml/outputs/charts/.gitkeep
+ml/outputs/reports/*
+!ml/outputs/reports/.gitkeep
+ml/outputs/models/*
+!ml/outputs/models/.gitkeep
+analytics/exports/*
+!analytics/exports/.gitkeep

@@ -1,0 +1,6 @@
+dataset_name: SB-Bench
+task_type: nlp_bias_benchmark
+target_column: ""
+protected_attributes: []
+model_name: ""
+notes: ""

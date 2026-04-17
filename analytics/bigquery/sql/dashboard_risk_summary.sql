@@ -1,0 +1,2 @@
+-- Placeholder query
+-- TODO: Summarize audit counts by risk level

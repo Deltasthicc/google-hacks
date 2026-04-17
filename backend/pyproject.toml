@@ -1,0 +1,7 @@
+[project]
+name = "unbiased-ai-backend"
+version = "0.1.0"
+description = "Placeholder FastAPI backend"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
