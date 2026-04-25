@@ -1,9 +1,33 @@
-fastapi
-uvicorn
-pydantic
-python-multipart
-google-cloud-storage
-google-cloud-firestore
-google-cloud-bigquery
-firebase-admin
-google-genai
+# Backend dependencies for NyayaLens FastAPI service.
+#
+# Pinned to compatible lower bounds that match what the code was written
+# against as of April 2026. Tighten these (==) rather than loosen them
+# before submission if you want deterministic builds.
+
+# --- Web framework ---
+fastapi>=0.115
+uvicorn[standard]>=0.32
+python-multipart>=0.0.12
+
+# --- Data validation ---
+pydantic>=2.7,<3.0
+
+# --- Google Gen AI and Cloud ---
+# google-genai is the unified SDK (not the deprecated google-generativeai).
+google-genai>=1.0
+google-cloud-storage>=2.18
+google-cloud-firestore>=2.19
+google-cloud-bigquery>=3.26
+firebase-admin>=6.5
+
+# --- Fairness libraries (used by the ML layer but imported here too
+#     for shared utilities like metric name constants) ---
+fairlearn>=0.11
+# aif360 is heavy; install it in the ML layer, not the backend container.
+
+# --- Testing ---
+pytest>=8.3
+pytest-asyncio>=0.24
+
+# --- Observability ---
+python-json-logger>=2.0

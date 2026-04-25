@@ -1,0 +1,114 @@
+{
+  "audit_id": "aud_demo_hiring_2026_04_17_002",
+  "created_at": "2026-04-17T11:05:00Z",
+  "project_id": "proj_demo_hiring",
+  "user_id": "user_demo",
+  "dataset": {
+    "name": "Adult",
+    "source": "UCI",
+    "n_rows": 32561,
+    "n_features": 14,
+    "task_type": "tabular_classification",
+    "target_column": "income_gt_50k",
+    "positive_label": 1,
+    "notes": "Framed as a hiring proxy: income > 50K stands in for 'likely to be shortlisted.' Not a claim about causation."
+  },
+  "model": {
+    "name": "xgboost_v1",
+    "family": "gbdt",
+    "framework": "xgboost",
+    "hyperparameters": {"max_depth": 6, "n_estimators": 200, "learning_rate": 0.1},
+    "version": "1.0.0"
+  },
+  "protected_attributes": [
+    {
+      "name": "sex",
+      "type": "binary",
+      "groups": ["Male", "Female"],
+      "reference_group": "Male"
+    },
+    {
+      "name": "race",
+      "type": "categorical",
+      "groups": ["White", "Black", "Asian-Pac-Islander", "Amer-Indian-Eskimo", "Other"],
+      "reference_group": "White"
+    }
+  ],
+  "overall_performance": {
+    "accuracy": 0.86,
+    "precision": 0.78,
+    "recall": 0.66,
+    "f1": 0.71,
+    "auc_roc": 0.91
+  },
+  "metrics_before_mitigation": {
+    "per_attribute": [
+      {
+        "attribute": "sex",
+        "per_group": [
+          {"group": "Male", "positive_prediction_rate": 0.30, "true_positive_rate": 0.71, "false_positive_rate": 0.10, "accuracy": 0.83, "support": 21790},
+          {"group": "Female", "positive_prediction_rate": 0.11, "true_positive_rate": 0.53, "false_positive_rate": 0.04, "accuracy": 0.91, "support": 10771}
+        ],
+        "disparities": {
+          "demographic_parity_difference": 0.19,
+          "equal_opportunity_difference": 0.18,
+          "equalized_odds_difference": 0.18,
+          "disparate_impact_ratio": 0.37
+        }
+      },
+      {
+        "attribute": "race",
+        "per_group": [
+          {"group": "White", "positive_prediction_rate": 0.26, "true_positive_rate": 0.68, "false_positive_rate": 0.09, "accuracy": 0.86, "support": 27816},
+          {"group": "Black", "positive_prediction_rate": 0.12, "true_positive_rate": 0.51, "false_positive_rate": 0.04, "accuracy": 0.90, "support": 3124},
+          {"group": "Asian-Pac-Islander", "positive_prediction_rate": 0.28, "true_positive_rate": 0.72, "false_positive_rate": 0.10, "accuracy": 0.85, "support": 1039},
+          {"group": "Amer-Indian-Eskimo", "positive_prediction_rate": 0.11, "true_positive_rate": 0.48, "false_positive_rate": 0.04, "accuracy": 0.88, "support": 311},
+          {"group": "Other", "positive_prediction_rate": 0.13, "true_positive_rate": 0.54, "false_positive_rate": 0.05, "accuracy": 0.87, "support": 271}
+        ],
+        "disparities": {
+          "demographic_parity_difference": 0.17,
+          "equal_opportunity_difference": 0.20,
+          "equalized_odds_difference": 0.20,
+          "disparate_impact_ratio": 0.42
+        }
+      }
+    ],
+    "intersectional": [
+      {
+        "attributes": ["sex", "race"],
+        "per_group": [
+          {"group": "Female_Black", "positive_prediction_rate": 0.05, "support": 1555},
+          {"group": "Male_White", "positive_prediction_rate": 0.31, "support": 18989}
+        ],
+        "worst_disparity": 0.26
+      }
+    ]
+  },
+  "metrics_after_mitigation": {
+    "mitigation_method": "threshold_optimizer",
+    "per_attribute": [
+      {
+        "attribute": "sex",
+        "per_group": [
+          {"group": "Male", "positive_prediction_rate": 0.27, "true_positive_rate": 0.67, "false_positive_rate": 0.09, "accuracy": 0.82, "support": 21790},
+          {"group": "Female", "positive_prediction_rate": 0.24, "true_positive_rate": 0.63, "false_positive_rate": 0.08, "accuracy": 0.88, "support": 10771}
+        ],
+        "disparities": {
+          "demographic_parity_difference": 0.03,
+          "equal_opportunity_difference": 0.04,
+          "equalized_odds_difference": 0.04,
+          "disparate_impact_ratio": 0.89
+        }
+      }
+    ],
+    "utility_cost": {
+      "accuracy_delta": -0.017,
+      "f1_delta": -0.022
+    }
+  },
+  "data_quality_flags": [
+    {"flag": "subgroup_underrepresentation", "attribute": "race", "group": "Amer-Indian-Eskimo", "severity": "high"},
+    {"flag": "small_sample_group", "attribute": "race", "group": "Other", "severity": "high"}
+  ],
+  "notes": "Secondary demo. Adult dataset as a hiring proxy. Emphasize intersectional disparity between Female_Black and Male_White."
+}
