@@ -306,6 +306,27 @@ def test_build_audit_history_row_no_mitigation(lending_payload: FairnessAuditPay
 
 
 # ---------------------------------------------------------------------------
+# Dashboard SQL placeholder substitution
+# ---------------------------------------------------------------------------
+
+
+def test_render_sql_substitutes_placeholders():
+    from app.ai_reports.bigquery_client import _render_sql
+
+    sql = _render_sql("dashboard_risk_summary.sql", "my-proj", "fairness")
+    assert "${project}" not in sql
+    assert "${dataset}" not in sql
+    assert "`my-proj.fairness.audit_history`" in sql
+
+
+def test_render_sql_requires_project():
+    from app.ai_reports.bigquery_client import _render_sql
+
+    with pytest.raises(RuntimeError, match="GOOGLE_CLOUD_PROJECT"):
+        _render_sql("dashboard_risk_summary.sql", "", "fairness")
+
+
+# ---------------------------------------------------------------------------
 # Live integration test (skipped without an API key)
 # ---------------------------------------------------------------------------
 
