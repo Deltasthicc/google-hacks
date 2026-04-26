@@ -20,10 +20,10 @@ google-cloud-firestore>=2.19
 google-cloud-bigquery>=3.26
 firebase-admin>=6.5
 
-# --- Fairness libraries (used by the ML layer but imported here too
-#     for shared utilities like metric name constants) ---
-fairlearn>=0.11
-# aif360 is heavy; install it in the ML layer, not the backend container.
+# --- Fairness libraries ---
+# Keep heavy ML dependencies out of the FastAPI runtime for now. Person 3 owns
+# Fairlearn/AIF360 in the ML layer, and the backend calls that code through
+# service boundaries once the functions are ready.
 
 # --- Testing ---
 pytest>=8.3
