@@ -6,7 +6,7 @@ from app.dependencies import get_current_user
 from app.schemas.common import ApiResponse, UserContext, success_response, utc_now
 from app.schemas.uploads import UploadResponse
 from app.services.firestore_service import save_document
-from app.services.storage_service import upload_file_stub
+from app.services.storage_service import upload_file
 from app.utils.ids import prefixed_id
 
 router = APIRouter(prefix="/api/v1", tags=["uploads"])
@@ -48,12 +48,13 @@ async def _create_upload(
     user: UserContext,
 ) -> ApiResponse[UploadResponse]:
     upload_id = prefixed_id("upload")
-    metadata = await upload_file_stub(
+    metadata = await upload_file(
         file.file,
         user_id=user.user_id,
         project_id=project_id,
         upload_id=upload_id,
         filename=file.filename or "upload.bin",
+        content_type=file.content_type,
     )
     upload = UploadResponse(
         upload_id=upload_id,

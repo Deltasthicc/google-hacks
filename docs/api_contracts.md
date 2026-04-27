@@ -34,7 +34,7 @@ Send Firebase Auth tokens as:
 Authorization: Bearer <firebase_id_token>
 ```
 
-Current implementation is a local stub. Real Firebase Admin verification will replace it without changing route contracts.
+If Firebase credentials are configured, the backend verifies this as a real Firebase Auth ID token and uses the decoded `uid` as `user_id`. Without Firebase credentials, local development falls back to a stub user so teammates can test the API.
 
 ## IDs
 
@@ -180,4 +180,14 @@ Expected collections:
 - `mitigation_runs`
 - `approvals`
 
-The current local service mirrors these collection names in memory so the Cloud Firestore implementation can replace it later.
+The backend writes to Cloud Firestore when Firebase Admin credentials are configured. Without credentials, it mirrors these collection names in memory for local development.
+
+## Storage
+
+Uploaded files are stored under:
+
+```text
+users/{user_id}/projects/{project_id}/uploads/{upload_id}/{filename}
+```
+
+The `storage_path` is private backend metadata and is not returned in upload responses.

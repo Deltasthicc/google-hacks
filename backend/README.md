@@ -24,14 +24,27 @@ http://localhost:8080/docs
 - Uses the shared success/error response envelope.
 - Exposes the blueprint endpoints under `/api/v1`.
 - Uses prefixed UUID public IDs such as `project_<uuid>` and `audit_<uuid>`.
-- Stores records in an in-memory Firestore stub for local development.
-- Reads uploaded file bytes but does not persist them to paid cloud storage yet.
-- Treats `Authorization: Bearer <token>` as a local stub user id until Firebase Admin verification is wired.
+- Uses Firebase Admin for Auth, Firestore, and Storage when credentials are configured.
+- Falls back to in-memory/local stub mode when Firebase credentials are absent.
+- Keeps private Storage paths out of public upload responses.
+
+## Firebase Environment
+
+For real Firebase mode, set these values in your local shell or uncommitted `.env`:
+
+```text
+APP_ENV=development
+GOOGLE_CLOUD_PROJECT=your-gcp-project-id
+FIREBASE_PROJECT_ID=your-firebase-project-id
+FIREBASE_STORAGE_BUCKET=your-firebase-bucket-name
+FIREBASE_SERVICE_ACCOUNT_JSON_PATH=C:\path\to\service-account.json
+```
+
+`FIREBASE_STRICT=true` forces Firebase mode and fails requests when tokens or credentials are invalid. Leave it `false` while teammates are testing locally without Firebase.
 
 ## Cloud TODOs
 
-- Replace `services/firebase_auth.py` with real Firebase Auth token verification.
-- Replace `services/firestore_service.py` with Cloud Firestore.
-- Replace `services/storage_service.py` with Firebase Storage or Cloud Storage.
+- Tighten Firebase Auth fallback before production/demo deploy.
+- Add signed download/export endpoints if frontend needs file access.
 - Connect `services/audit_service.py` to Person 3's fairness functions.
 - Connect `services/export_service.py` to Person 4's AI report generator.
