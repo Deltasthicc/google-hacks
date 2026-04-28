@@ -11,8 +11,12 @@ import numpy as np
 # group-specific decision thresholds that satisfy a fairness constraint.
 from fairlearn.postprocessing import ThresholdOptimizer
 
-from ml.src.train import evaluate_model
-from ml.src.evaluate import detect_bias
+try:
+    from ml.src.train import evaluate_model
+    from ml.src.evaluate import detect_bias
+except ModuleNotFoundError:
+    from src.train import evaluate_model
+    from src.evaluate import detect_bias
 
 
 def apply_mitigation(

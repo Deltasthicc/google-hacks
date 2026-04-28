@@ -65,23 +65,26 @@ def preprocess(df, target_col="income", sensitive_cols=None):
             cleaned_df = cleaned_df[~has_question_mark]
     cleaned_df = cleaned_df.dropna()
 
-    # --- Encode target to binary ---
-    income_labels = cleaned_df[target_col].apply(
-        lambda value: 1 if ">50K" in str(value) else 0
-    )
+    # --- Encode target to binary (Generic) ---
+    unique_vals = cleaned_df[target_col].unique()
+    
+    if len(unique_vals) > 2:
+        # If it looks like continuous income (many numeric values), binarize at 50k
+        print(f"  NOTE: Continuous target detected. Binarizing at 50,000 threshold.")
+        income_labels = (cleaned_df[target_col] > 50000).astype(int)
+    else:
+        # Map the first value to 0, second to 1
+        target_map = {unique_vals[0]: 0, unique_vals[1]: 1}
+        income_labels = cleaned_df[target_col].map(target_map)
 
     # --- Extract sensitive columns before dropping ---
     sensitive_data = {}
     for col in sensitive_cols:
         sensitive_data[col] = cleaned_df[col].copy()
 
-    # --- Drop sensitive columns, fnlwgt, race, and target from features ---
-    columns_to_drop = sensitive_cols + [target_col]
-    for extra_col in ["fnlwgt", "race"]:
-        if extra_col in cleaned_df.columns and extra_col not in columns_to_drop:
-            columns_to_drop.append(extra_col)
-
-    feature_df = cleaned_df.drop(columns=columns_to_drop)
+    # --- Build features ---
+    # Drop target and sensitive columns
+    feature_df = cleaned_df.drop(columns=sensitive_cols + [target_col])
 
     # --- One-hot encode categoricals ---
     feature_df = pd.get_dummies(feature_df, drop_first=True)
@@ -103,21 +106,14 @@ def preprocess(df, target_col="income", sensitive_cols=None):
         scaled_test, columns=features_test.columns, index=features_test.index
     )
 
-    # --- Split sensitive columns to match train/test ---
-    sensitive_train_dict = {}
-    sensitive_test_dict = {}
-    for col in sensitive_cols:
-        sensitive_train_dict[col] = sensitive_data[col].loc[features_train.index]
-        sensitive_test_dict[col] = sensitive_data[col].loc[features_test.index]
-
-    # For single sensitive column, also provide flat Series for convenience
+    # --- Split sensitive columns ---
     if len(sensitive_cols) == 1:
         primary_col = sensitive_cols[0]
-        sensitive_train = sensitive_train_dict[primary_col]
-        sensitive_test = sensitive_test_dict[primary_col]
+        sensitive_train = sensitive_data[primary_col].loc[features_train.index]
+        sensitive_test = sensitive_data[primary_col].loc[features_test.index]
     else:
-        sensitive_train = pd.DataFrame(sensitive_train_dict)
-        sensitive_test = pd.DataFrame(sensitive_test_dict)
+        sensitive_train = cleaned_df[sensitive_cols].loc[features_train.index]
+        sensitive_test = cleaned_df[sensitive_cols].loc[features_test.index]
 
     return {
         "status": "success",
@@ -127,5 +123,4 @@ def preprocess(df, target_col="income", sensitive_cols=None):
         "income_labels_test": labels_test,
         "sensitive_train": sensitive_train,
         "sensitive_test": sensitive_test,
-        "feature_names": list(features_train.columns),
     }

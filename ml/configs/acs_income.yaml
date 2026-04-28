@@ -1,6 +1,7 @@
+openml_id: 43141
 dataset_name: ACSIncome
 task_type: tabular_classification
-target_column: ""
-protected_attributes: []
-model_name: ""
+target_column: "PINCP"
+protected_attributes: ["SEX"]
+model_name: "XGBoost"
 notes: ""

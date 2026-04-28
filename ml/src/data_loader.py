@@ -1,8 +1,8 @@
 """
 Data loader for FairLens AI / NyayaLens.
 
-Loads the UCI Adult (Census Income) dataset from OpenML,
-returning a clean pandas DataFrame ready for preprocessing.
+Provides utilities for loading standard benchmark datasets (like Adult)
+and custom user-uploaded CSV files.
 """
 
 import pandas as pd
@@ -27,6 +27,17 @@ def load_adult_dataset():
     adult_bunch = fetch_openml("adult", version=2, as_frame=True)
     raw_dataframe = adult_bunch.frame
     return raw_dataframe
+
+
+def load_openml_dataset(name_or_id, version=1):
+    """
+    Generic helper to load any dataset from OpenML by name or ID.
+    """
+    if isinstance(name_or_id, int):
+        bunch = fetch_openml(data_id=name_or_id, as_frame=True, parser="auto")
+    else:
+        bunch = fetch_openml(name=name_or_id, version=version, as_frame=True, parser="auto")
+    return bunch.frame
 
 
 def load_csv_dataset(csv_path):

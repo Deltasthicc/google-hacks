@@ -10,23 +10,31 @@ import json
 import os
 import yaml
 
-from ml.src.data_loader import load_adult_dataset, load_csv_dataset
-from ml.src.preprocessing import preprocess
-from ml.src.train import train_model, evaluate_model
-from ml.src.evaluate import detect_bias
-from ml.src.mitigation import apply_mitigation
+try:
+    from ml.src.data_loader import load_adult_dataset, load_csv_dataset
+    from ml.src.preprocessing import preprocess
+    from ml.src.train import train_model, evaluate_model
+    from ml.src.evaluate import detect_bias
+    from ml.src.mitigation import apply_mitigation
+except ModuleNotFoundError:
+    from src.data_loader import load_adult_dataset, load_csv_dataset
+    from src.preprocessing import preprocess
+    from src.train import train_model, evaluate_model
+    from src.evaluate import detect_bias
+    from src.mitigation import apply_mitigation
 
 
-def run_pipeline(config_path=None, csv_path=None, target_col="class",
+def run_pipeline(config_path=None, csv_path=None, df=None, target_col="class",
                  sensitive_cols=None):
     """
     Execute the full fairness audit pipeline and return a results dict.
 
-    Can be driven by a YAML config file or by explicit arguments.
+    Can be driven by a YAML config file, a CSV path, or a direct DataFrame.
 
     Args:
         config_path:     Path to a YAML config in ml/configs/ (optional).
         csv_path:        Direct path to a CSV file (optional).
+        df:              Direct pandas DataFrame (optional).
         target_col:      Name of the target column.
         sensitive_cols:  List of sensitive attribute column names.
 
@@ -47,16 +55,20 @@ def run_pipeline(config_path=None, csv_path=None, target_col="class",
         if config.get("protected_attributes"):
             sensitive_cols = config["protected_attributes"]
     else:
-        dataset_name = "Custom CSV"
+        dataset_name = "Custom Dataset"
 
     # --- Load data ---
-    if csv_path is not None:
+    if df is not None:
+        raw_df = df
+    elif csv_path is not None:
         raw_df = load_csv_dataset(csv_path)
-        if isinstance(raw_df, dict) and raw_df.get("status") == "error":
-            return raw_df
-    else:
+    elif config.get("openml_id"):
+        from ml.src.data_loader import load_openml_dataset
+        raw_df = load_openml_dataset(config["openml_id"])
+    elif dataset_name == "Adult":
         raw_df = load_adult_dataset()
-
+    else:
+        return {"status": "error", "message": "No data source or openml_id provided."}
     # --- Preprocess ---
     prep_result = preprocess(raw_df, target_col=target_col,
                              sensitive_cols=sensitive_cols)
