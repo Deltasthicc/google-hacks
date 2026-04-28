@@ -1,6 +1,6 @@
 dataset_name: Adult
 task_type: tabular_classification
-target_column: ""
-protected_attributes: []
-model_name: ""
-notes: ""
+target_column: "class"
+protected_attributes: ["sex"]
+model_name: "LogisticRegression"
+notes: "UCI Adult Census Income dataset from OpenML (version 2)"

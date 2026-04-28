@@ -2,6 +2,10 @@ pandas
 numpy
 scikit-learn
 jupyter
+ipykernel
 fairlearn
 aif360
 pyyaml
+matplotlib
+seaborn
+openpyxl

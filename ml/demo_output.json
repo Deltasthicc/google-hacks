@@ -1,0 +1,83 @@
+{
+  "status": "success",
+  "dataset": "UCI Adult (Census Income)",
+  "sensitive_column": "sex",
+  "target_column": "income (class)",
+  "mitigation_method": "Fairlearn ThresholdOptimizer (equalized_odds)",
+  "before": {
+    "model_metrics": {
+      "accuracy": 0.8488667772249862,
+      "precision": 0.7369614512471655,
+      "recall": 0.5901044030867,
+      "f1": 0.6554071086463322
+    },
+    "bias_detection": {
+      "status": "success",
+      "metrics": {
+        "by_group": {
+          "Female": {
+            "accuracy": 0.9250769757098871,
+            "recall": 0.5165165165165165
+          },
+          "Male": {
+            "accuracy": 0.8124795818360013,
+            "recall": 0.6032085561497326
+          }
+        },
+        "differences": {
+          "accuracy_difference": 0.1126,
+          "recall_difference": 0.0867
+        }
+      },
+      "findings": [
+        {
+          "severity": "HIGH",
+          "attribute": "sex",
+          "description": "Accuracy Difference is 11 percentage points. Severity: HIGH.",
+          "metric": "accuracy_difference",
+          "value": 0.1126
+        },
+        {
+          "severity": "MEDIUM",
+          "attribute": "sex",
+          "description": "Recall Difference is 9 percentage points. Severity: MEDIUM.",
+          "metric": "recall_difference",
+          "value": 0.0867
+        }
+      ]
+    }
+  },
+  "after": {
+    "model_metrics": {
+      "accuracy": 0.7747927031509121,
+      "precision": 0.5241138872748402,
+      "recall": 0.8188833408987743,
+      "f1": 0.6391496899911426
+    },
+    "bias_detection": {
+      "status": "success",
+      "metrics": {
+        "by_group": {
+          "Female": {
+            "accuracy": 0.7608621279507356,
+            "recall": 0.8528528528528528
+          },
+          "Male": {
+            "accuracy": 0.7814439725579876,
+            "recall": 0.8128342245989305
+          }
+        },
+        "differences": {
+          "accuracy_difference": 0.0206,
+          "recall_difference": 0.04
+        }
+      },
+      "findings": []
+    }
+  },
+  "improvement": {
+    "accuracy_change": -0.0741,
+    "recall_difference_change": -0.0467,
+    "summary": "Recall gap reduced from 0.09 to 0.04 (change: -0.05). Accuracy change: -0.0741. Mitigation recommended."
+  }
+}
