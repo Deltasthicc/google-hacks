@@ -131,23 +131,39 @@ def _load_sql(filename: str) -> str:
     return path.read_text(encoding="utf-8")
 
 
+def _render_sql(filename: str, project: str, dataset: str) -> str:
+    """Substitute ${project} and ${dataset} placeholders. BigQuery does not
+    parse this syntax natively, so we do it client-side before sending."""
+    if not project:
+        raise RuntimeError("No GCP project configured. Set GOOGLE_CLOUD_PROJECT.")
+    return (
+        _load_sql(filename)
+        .replace("${project}", project)
+        .replace("${dataset}", dataset)
+    )
+
+
 def run_risk_summary(
     *,
     client: "bigquery.Client | None" = None,
     project: str | None = None,
+    dataset: str = DEFAULT_DATASET,
 ) -> list[dict[str, Any]]:
     """Audit counts by risk level over the last 90 days."""
-    return _run_query("dashboard_risk_summary.sql", client=client, project=project)
+    return _run_query(
+        "dashboard_risk_summary.sql", client=client, project=project, dataset=dataset
+    )
 
 
 def run_metric_failures(
     *,
     client: "bigquery.Client | None" = None,
     project: str | None = None,
+    dataset: str = DEFAULT_DATASET,
 ) -> list[dict[str, Any]]:
     """Most common failing fairness metric across audits."""
     return _run_query(
-        "dashboard_metric_failures.sql", client=client, project=project
+        "dashboard_metric_failures.sql", client=client, project=project, dataset=dataset
     )
 
 
@@ -155,10 +171,11 @@ def run_mitigation_impact(
     *,
     client: "bigquery.Client | None" = None,
     project: str | None = None,
+    dataset: str = DEFAULT_DATASET,
 ) -> list[dict[str, Any]]:
     """Before/after disparity deltas grouped by mitigation method."""
     return _run_query(
-        "dashboard_mitigation_impact.sql", client=client, project=project
+        "dashboard_mitigation_impact.sql", client=client, project=project, dataset=dataset
     )
 
 
@@ -167,11 +184,12 @@ def _run_query(
     *,
     client: "bigquery.Client | None" = None,
     project: str | None = None,
+    dataset: str = DEFAULT_DATASET,
 ) -> list[dict[str, Any]]:
     from google.cloud import bigquery  # lazy import
 
     project = project or DEFAULT_PROJECT
     client = client or bigquery.Client(project=project)
-    sql = _load_sql(filename)
+    sql = _render_sql(filename, project, dataset)
     job = client.query(sql)
     return [dict(row) for row in job.result()]

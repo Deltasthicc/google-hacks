@@ -1,0 +1,6 @@
+# Optional local integration dependencies for wiring Person 3's ML code into
+# backend services. Do not install this in the Cloud Run API container until
+# those functions are actually imported by the backend.
+
+fairlearn>=0.11
+# aif360 is heavy; install only in ML/dev environments that need it.
