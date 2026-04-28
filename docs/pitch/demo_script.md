@@ -1,86 +1,169 @@
 # Demo Script
 
-A four-minute walkthrough. Every timing target is a guideline, not a hard cut. If you run long, cut the policy-document section first, because the core story survives without it.
+Walkthrough script for whoever is on camera. Timing targets are guidelines. If you run long, cut the policy-document block first; the fairness pipeline plus Gemini report carry the submission.
 
-Target length: 4:00. Hard cap: 5:00.
+Target length: **4:00** to **5:30**. Hard cap if judges impose one: **6:00**.
+
+Operator setup (commands, terminals, CSV paths) lives in **`demo_operator_handoff.md`** in this folder. Read that once before rehearsal.
 
 ---
 
-## 0:00 — 0:20 · Open with the stake
+## 0:00 — 0:25 · Hook and problem frame
 
-*On screen:* NyayaLens title card.
+*On screen:* NyayaLens title or landing hero; cursor steady.
 
-> "When an automated system decides who gets a loan, who gets shortlisted for a job, or who gets triaged first in a hospital, it makes that decision thousands of times a day. If that system is biased, the harm scales with it. NyayaLens is a fairness audit workspace that catches that bias before the system ships."
+**Anchor line:**
 
-## 0:20 — 0:50 · Who it is for, in one breath
+> "Automated systems decide loans, hiring shortlists, benefits, triage queues, thousands of times a day. Each decision looks small; the aggregate harm is not. If the model carries statistical bias against a protected group, that bias ships at scale. NyayaLens exists so teams measure that bias before deployment, explain it to non-engineers, and keep an audit trail."
 
-*On screen:* Landing page of the MVP with the "Create an audit" button highlighted.
+**Extra yap (pick any):**
 
-> "NyayaLens is built for three kinds of user. The data scientist who wants to run a fairness check before deploying a model. The compliance officer who has to explain what that model does to a regulator. And the civil-society researcher auditing someone else's system from the outside. All three get the same product. They just read it at different depths."
+> "Most teams stop at offline notebooks. Compliance asks for evidence; notebooks do not survive audits. NyayaLens treats fairness like release engineering: repeatable runs, structured outputs, monitoring downstream."
 
-## 0:50 — 1:30 · The audit walkthrough, lending demo
+Pause half a beat before clicking anything.
 
-*On screen:* Upload page. Select the pre-loaded South German Credit sample.
+---
 
-> "Here's a real audit on the South German Credit dataset. I've mapped the target column to `credit_approved` and flagged `gender` as the protected attribute. I hit Run."
+## 0:25 — 1:05 · Audience and product promise
 
-*Transition to the results page.*
+*On screen:* Landing or dashboard with primary action visible.
 
-> "The model is 78% accurate overall. But look at the approval rates. Men approved 71% of the time. Women approved 52% of the time. A demographic-parity gap of nineteen percentage points."
+**Anchor line:**
 
-*Point at the counterfactual card.*
+> "Three personas share one tool. An ML engineer validates disparity metrics before merge. A compliance officer reads plain-language findings without touching sklearn. An external researcher inspects documented audits instead of trusting vendor slides. Same backend; three reading depths."
 
-> "This counterfactual card shows what happens when we flip the gender attribute on 200 applicants. In 16% of cases, the prediction changes. Same features. Same model. Different outcome."
+**Extra yap:**
 
-## 1:30 — 2:00 · Mitigation
+> "Fairness here is not vibes. Numbers come from Fairlearn on held-out data. Gemini narrates those numbers; it does not invent metrics. That separation matters when regulators ask what was measured."
 
-*On screen:* Toggle on "Apply reweighing mitigation" and re-run.
+Gesture toward navigation calmly; avoid racing through menus.
 
-> "One click applies reweighing, which is a standard pre-processing mitigation from Fairlearn. The gap closes from 19% to 5%. Disparate impact ratio rises to 0.92, well inside conventional thresholds. Accuracy costs us two percentage points. The product tells you that tradeoff explicitly."
+---
 
-## 2:00 — 2:45 · The AI report
+## 1:05 — 2:15 · Dataset and audit run
 
-*On screen:* Switch to the Executive report tab.
+*On screen:* Project workspace; upload flow.
 
-> "This is the part most fairness tools do not do. Gemini takes the structured audit output and writes a report a compliance officer can actually read. Plain-English verdict. Risk level. Findings with severity. Who is affected. What to do next."
+### Path A · Bundled synthetic CSV (recommended for reliability)
 
-*Scroll down, pause on the "Who is affected" card.*
+Use **`lending_mini_demo.csv`** from `ml/datasets/demo/` if OpenML or uploads stall.
 
-> "Every claim in this report is grounded in a number that was actually computed. Our validator rejects any output that names a group not in the payload or a metric that was not measured. Hallucination is caught before the user sees it."
+**Anchor line:**
 
-*Switch to the Technical tab.*
+> "I am using a small synthetic lending-style table we ship in the repo so the demo is reproducible. Target column is approval; protected attribute is gender. I start the audit and let the pipeline train a baseline model, score the test split, measure group gaps, then apply Fairlearn mitigation."
 
-> "Same JSON. Different rendering. An ML engineer gets the full metric table, thresholds, and algorithmic recommendations."
+**Extra yap:**
 
-## 2:45 — 3:15 · Policy-aware governance (optional, cut if running long)
+> "Synthetic does not mean fake math. Training, testing, disparity, mitigation, all run for real on this file. We label it synthetic in slides so nobody confuses it with production PII."
 
-*On screen:* Policy upload screen. Drop a sample underwriting policy PDF.
+### Path B · South German Credit or Adult (if already loaded)
 
-> "Let me add a policy document. This is a fictional underwriting guideline from a lending organisation. Gemini reads it, extracts the fairness rules it imposes, and the report gets a Policy Alignment block. In this case the policy says approval rates cannot differ by more than 10% across genders. Our unmitigated model violates that rule. The report says so."
+**Anchor line:**
 
-## 3:15 — 3:45 · Audit history and monitoring
+> "On a fuller benchmark dataset you would map the credit or income target and flag sensitive fields the same way. I hit Run and wait for completion so every number you will see came from this run."
 
-*On screen:* Switch to the Looker Studio dashboard (pre-filtered to the demo project).
+*Transition:* Audit status moves to completed; open results or dashboard card.
 
-> "Every audit is stored in BigQuery. This dashboard shows the risk trend over the last 30 days, which disparity metrics fail most often, which groups get flagged repeatedly across audits, and whether mitigation actually closes the gap. This is the difference between a fairness notebook and a fairness system. The product remembers."
+**Anchor line:**
 
-## 3:45 — 4:00 · Grounding and close
+> "Overall accuracy tells a partial story. What matters for fairness is whether positive decisions spread differently across groups. Here you see per-group rates and gaps, not just a headline AUC."
 
-*On screen:* Closing title card with team names, repo link, SDG badges (10, 16, 5).
+**Counterfactual card (if visible on UI):**
 
-> "The counterfactual framework we use is built on Iqbal and Ismail's 2025 paper on bias detection in sovereign digital systems. The benchmarks include BharatBBQ, which evaluates bias across eight Indian languages. SDG 10, reduced inequalities, primary. Built with Flutter, Firebase, Cloud Run, Gemini, and BigQuery. Thank you."
+> "Counterfactuals test sensitivity: when we flip proxy or protected signal in a controlled way, how often does the model change its mind? A high flip rate is a warning that the boundary leans on attributes it should not."
+
+If the UI hides exact flip numbers, speak them only if they are on screen (submission rule: no invented stats).
+
+---
+
+## 2:15 — 2:50 · Mitigation tradeoff
+
+*On screen:* Before/after or mitigation toggle if present.
+
+**Anchor line:**
+
+> "Mitigation is not magic. Fairlearn ThresholdOptimizer searches fairer thresholds subject to constraints; you often pay a little accuracy for a lot of gap reduction. The product surfaces that tradeoff instead of hiding it behind a single green checkmark."
+
+**Extra yap:**
+
+> "Responsible teams disagree on acceptable tradeoffs; the product makes the tradeoff explicit so policy, not vibes, decides what ships."
+
+---
+
+## 2:50 — 4:00 · Gemini report (executive then technical)
+
+*On screen:* Report view; Executive first.
+
+**Anchor line:**
+
+> "This is where Google Gemini plugs in. The model never recomputes fairness metrics. It reads a strict JSON audit payload produced by our pipeline and writes a governance-style report: verdict, severity, impacted groups, recommendations. That keeps narrative aligned with measurement."
+
+**Extra yap:**
+
+> "We validate model output against the payload. If Gemini names a group that was not in the data or cites a metric we did not compute, validation fails or repairs. Hallucinated harm is worse than no report."
+
+*Scroll slowly* through one finding block.
+
+**Technical tab:**
+
+> "The same underlying JSON renders in technical mode for engineers: metric names, deltas, thresholds. One audit artifact, two audiences."
+
+If `GEMINI_API_KEY` was not set during recording, say honestly:
+
+> "In this take the backend used our offline narrative template because no API key was bound; with a key you get full Gemini prose on the same numbers."
+
+---
+
+## 4:00 — 4:40 · Policy block (optional; cut first if tight)
+
+*On screen:* Policy upload; optional PDF.
+
+**Anchor line:**
+
+> "Some orgs anchor decisions in written policy. You can upload a PDF; a faster Gemini model extracts fairness-relevant clauses, and the report can include a policy alignment section. The model still cannot override measured disparities."
+
+Skip entirely if PDF or extraction is not wired in this build.
+
+---
+
+## 4:40 — 5:15 · Persistence and monitoring
+
+*On screen:* BigQuery or Looker Studio if deployed; otherwise Firestore history or export list.
+
+**Anchor line:**
+
+> "Audits worth running are audits worth remembering. Completed runs can land in BigQuery for trend analysis; Looker Studio shows how risk and gap patterns evolve across projects. That is the shift from notebook to system."
+
+If cloud is not live:
+
+> "This environment is local; in production the same pipeline streams to BigQuery for the dashboard judges can open from the submission links."
+
+---
+
+## 5:15 — 5:45 · Grounding and close
+
+*On screen:* Closing card: team, repo link, SDG icons if applicable.
+
+**Anchor line:**
+
+> "We ground counterfactual-style analysis in published research on bias detection. We connect to Google Cloud: Flutter and Firebase on the client, Cloud Run for the API, Gemini for trustworthy narrative, BigQuery for history. Primary SDG alignment: reduced inequalities. Thank you."
+
+**Extra yap (one sentence max):**
+
+> "If you remember one thing: metrics are deterministic, language is grounded, tradeoffs are visible. That is NyayaLens."
 
 ---
 
 ## Recording checklist
 
 - [ ] Screen recorded at 1080p minimum
-- [ ] System audio muted; only voiceover on the track
-- [ ] Cursor visible and steady; no dart-and-click
-- [ ] Every number on screen is real, not a mock
-- [ ] Browser has no personal tabs, no bookmarks visible
-- [ ] Unlisted upload, link added to `docs/submission/project_links.md`
+- [ ] System audio muted; voiceover only on the track
+- [ ] Cursor visible and steady; avoid rapid click spam
+- [ ] Every number on screen traces to a real run in this session
+- [ ] Browser has no personal tabs, no embarrassing bookmarks bar clutter
+- [ ] Unlisted upload; link filed in submission and `docs/submission/project_links.md`
+- [ ] Rehearsed once end-to-end with `demo_operator_handoff.md` commands
 
-## If the live MVP breaks during the recording
+## If the live MVP breaks during recording
 
-Fall back to a pre-recorded screen capture of the audit run, played back in real time, voiced over live. The fact that this exists as a plan saves the submission.
+Fall back to a pre-recorded screen capture of the same flow, voiced over live. Keep the narrative honest about which take is live vs backup.

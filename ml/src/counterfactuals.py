@@ -67,7 +67,7 @@ def run_counterfactual_check(model, features_test, sensitive_test):
         "flipped": prediction_flipped,
     })
     flip_rate_by_group = {}
-    for group_name, group_data in flip_df.groupby("group"):
+    for group_name, group_data in flip_df.groupby("group", observed=False):
         flip_rate_by_group[str(group_name)] = float(group_data["flipped"].mean())
 
     # Severity

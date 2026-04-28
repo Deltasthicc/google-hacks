@@ -1,0 +1,9 @@
+dataset_name: Demo Hiring Mini
+task_type: tabular_classification
+target_column: hired
+protected_attributes: ["sex"]
+local_csv: datasets/demo/hiring_mini_demo.csv
+model_name: LogisticRegression
+notes: >
+  Second synthetic CSV for hiring-style demos; outcome correlates with sex
+  plus interview score for visible disparity and mitigation.

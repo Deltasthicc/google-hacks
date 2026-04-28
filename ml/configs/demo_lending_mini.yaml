@@ -1,0 +1,10 @@
+dataset_name: Demo Lending Mini
+task_type: tabular_classification
+target_column: approved
+protected_attributes: ["gender"]
+# CSV shipped in-repo for offline demos (no OpenML download).
+local_csv: datasets/demo/lending_mini_demo.csv
+model_name: LogisticRegression
+notes: >
+  Synthetic demo data (seeded random, bias by gender). Use for screenshots,
+  Docker demos, and CI-friendly runs without network access.

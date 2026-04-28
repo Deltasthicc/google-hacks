@@ -40,4 +40,17 @@ async def upload_file(
     }
 
 
+def download_storage_object(storage_path: str, destination_path: str) -> None:
+    """Download a Storage object to a local path. Requires Firebase Storage."""
+    app = get_firebase_app()
+    if app is None:
+        raise RuntimeError("Firebase Storage is not configured.")
+
+    from firebase_admin import storage
+
+    bucket = storage.bucket(app=app)
+    blob = bucket.blob(storage_path)
+    blob.download_to_filename(destination_path)
+
+
 upload_file_stub = upload_file

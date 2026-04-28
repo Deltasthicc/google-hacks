@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 import pandas as pd
 
 from ml.src.benchmark_runner import run_pipeline
@@ -65,8 +67,20 @@ def test_counterfactual_check_returns_low_severity_for_constant_model():
     assert result["proxy_columns_used"] == ["relationship_Husband", "relationship_Wife"]
 
 
-def test_run_pipeline_without_data_source_returns_error():
-    result = run_pipeline()
+def test_demo_lending_mini_yaml_pipeline_runs_offline():
+    """Bundled CSV demo needs no OpenML download (stable CI)."""
+    repo_root = Path(__file__).resolve().parents[2]
+    cfg = repo_root / "ml" / "configs" / "demo_lending_mini.yaml"
+    result = run_pipeline(config_path=str(cfg))
 
-    assert result["status"] == "error"
-    assert "No data source" in result["message"]
+    assert result["status"] == "success"
+    assert result["dataset"] == "Demo Lending Mini"
+
+
+def test_demo_hiring_mini_yaml_pipeline_runs_offline():
+    repo_root = Path(__file__).resolve().parents[2]
+    cfg = repo_root / "ml" / "configs" / "demo_hiring_mini.yaml"
+    result = run_pipeline(config_path=str(cfg))
+
+    assert result["status"] == "success"
+    assert result["dataset"] == "Demo Hiring Mini"

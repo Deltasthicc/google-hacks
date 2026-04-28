@@ -117,6 +117,14 @@ def apply_mitigation(
             "recall_difference_change": float(round(recall_diff_change, 4)),
             "summary": improvement_summary,
         },
+        # Serialized test-set arrays for NyayaLens FairnessAuditPayload export only.
+        "_contract_arrays": {
+            "y_true": [int(x) for x in income_labels_test.to_numpy()],
+            "y_pred_before": [int(x) for x in np.asarray(baseline_predictions).ravel()],
+            "y_pred_after": [int(x) for x in np.asarray(mitigated_predictions).ravel()],
+            "sensitive": [str(x) for x in sensitive_test.to_numpy()],
+            "attribute_name": attribute_name,
+        },
     }
 
     return result_dict
