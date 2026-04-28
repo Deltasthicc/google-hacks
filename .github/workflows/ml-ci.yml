@@ -3,9 +3,11 @@ name: ML CI
 on:
   push:
     paths:
+      - ".github/workflows/ml-ci.yml"
       - "ml/**"
   pull_request:
     paths:
+      - ".github/workflows/ml-ci.yml"
       - "ml/**"
 
 jobs:

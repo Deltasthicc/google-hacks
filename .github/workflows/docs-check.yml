@@ -3,10 +3,12 @@ name: Docs Check
 on:
   push:
     paths:
+      - ".github/workflows/docs-check.yml"
       - "docs/**"
       - "README.md"
   pull_request:
     paths:
+      - ".github/workflows/docs-check.yml"
       - "docs/**"
       - "README.md"
 
