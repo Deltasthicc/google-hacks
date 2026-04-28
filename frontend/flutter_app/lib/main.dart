@@ -1,2 +1,7 @@
-// Placeholder entry point for Flutter app
-// TODO: Initialize app, Firebase, and route configuration
+import 'package:flutter/material.dart';
+
+import 'app.dart';
+
+void main() {
+  runApp(const NyayaLensApp());
+}

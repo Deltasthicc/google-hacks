@@ -11,7 +11,7 @@ analytics/
                      backend/app/ai_reports/schemas.py
     sql/             Table-creation DDL and dashboard queries
   looker/            Dashboard planning docs (notes, charts, filters)
-  exports/           Placeholder for sample exported reports
+  exports/           Local sample exported reports, ignored except .gitkeep
 ```
 
 ## Responsibilities

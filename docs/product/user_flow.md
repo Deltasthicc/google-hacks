@@ -8,4 +8,15 @@
 6. Open AI report
 7. Export results
 
-Placeholder details to refine later.
+## MVP Flow
+
+The current web app starts in Workspace setup. A user creates a project, uploads
+a dataset and optional policy document, configures target/prediction/sensitive
+columns, then queues data, model, counterfactual, or benchmark audits. Reports
+are generated from the latest audit and shown in executive or technical mode.
+
+## Production Flow
+
+Firebase Auth supplies ID tokens to the backend. Uploaded files are stored in
+Firebase Storage, audit metadata is stored in Firestore, generated report rows
+can be persisted to BigQuery, and the dashboard reads the project audit history.

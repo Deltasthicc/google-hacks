@@ -11,8 +11,14 @@ on:
       - "README.md"
 
 jobs:
-  placeholder:
+  markdown-sanity:
     runs-on: ubuntu-latest
     steps:
-      - name: Placeholder
-        run: echo "Add docs checks later"
+      - uses: actions/checkout@v4
+      - name: Check for unresolved placeholders
+        shell: bash
+        run: |
+          if git grep -nE "Placeholder|TODO: Add|TBD by submission day" -- README.md docs infra analytics backend frontend; then
+            echo "Unresolved documentation placeholders found."
+            exit 1
+          fi

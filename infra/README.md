@@ -1,10 +1,11 @@
 # Infrastructure
 
 ## Purpose
-Placeholder infra notes for Firebase, GCP, Cloud Run, BigQuery, and IAM.
+Deployment notes and configuration for Firebase, GCP, Cloud Run, BigQuery,
+and IAM.
 
 ## Includes
-- Firebase config placeholders
+- Firebase Hosting, Firestore, and Storage rules
 - GCP setup notes
 - IAM role notes
 - GitHub templates

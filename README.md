@@ -122,7 +122,7 @@ print(to_markdown(result.report))
 
 ## Try the live MVP
 
-> **Live URL:** _TBD by submission day — see `docs/submission/project_links.md`._
+> **Live URL:** see `docs/submission/project_links.md` once the demo deployment is assigned.
 
 The demo projects preloaded into the MVP are South German Credit (lending) and Adult (hiring). Both run end-to-end with pre-mitigation metrics, reweighing applied, and a policy document PDF attached.
 

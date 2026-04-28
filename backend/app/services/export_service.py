@@ -31,7 +31,7 @@ def create_report(
         "created_at": utc_now(),
         "report": {
             "title": "NyayaLens Fairness Report",
-            "summary": "Placeholder report generated from accepted audit metadata.",
+            "summary": "Draft report generated from accepted audit metadata.",
             "audit_status": audit.get("status") if audit else "unknown",
             "findings": [],
             "recommendations": [
