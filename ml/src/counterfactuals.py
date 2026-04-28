@@ -31,7 +31,7 @@ def run_counterfactual_check(model, features_test, sensitive_test):
             - flip_rate_by_group: dict of flip rate per sensitive group
             - severity: 'HIGH' (>10%), 'MEDIUM' (5-10%), 'LOW' (<5%)
     """
-    original_predictions = model.predict(features_test)
+    original_predictions = np.asarray(model.predict(features_test))
 
     # Find relationship proxy columns (these correlate with gender)
     relationship_cols = [c for c in features_test.columns
@@ -54,7 +54,7 @@ def run_counterfactual_check(model, features_test, sensitive_test):
         for col in relationship_cols:
             counterfactual_test[col] = -counterfactual_test[col]
 
-    counterfactual_predictions = model.predict(counterfactual_test)
+    counterfactual_predictions = np.asarray(model.predict(counterfactual_test))
 
     # Measure flip rate
     prediction_flipped = original_predictions != counterfactual_predictions

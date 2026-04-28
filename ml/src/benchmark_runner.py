@@ -55,6 +55,7 @@ def run_pipeline(config_path=None, csv_path=None, df=None, target_col="class",
         if config.get("protected_attributes"):
             sensitive_cols = config["protected_attributes"]
     else:
+        config = {}
         dataset_name = "Custom Dataset"
 
     # --- Load data ---
